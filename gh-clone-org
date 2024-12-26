@@ -163,6 +163,7 @@ do
   then
     echo "'$d' already exists, attempting to checkout the default branch and pull"
     cd "$d"
+    git fetch --all --prune
     default_branch="$(gh api "repos/$repo" -q '.default_branch')"
     git checkout "$default_branch" && git pull
     cd ..
