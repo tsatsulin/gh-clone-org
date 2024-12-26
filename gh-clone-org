@@ -17,6 +17,8 @@ usage()
   echo "    Clone repositories found by this search string. If this is provided '-t' will be ignored."
   echo "    Example: -s \"is:public language:go\""
   echo "    See: https://docs.github.com/en/github/searching-for-information-on-github/searching-on-github/searching-for-repositories"
+  echo "  -m, --mirror"
+  echo "    Set up a mirror of the source repository."
   echo "  -n, --dry-run"
   echo "    Do not actually clone, just show what would be cloned"
   echo "  -h, --help"
@@ -58,6 +60,8 @@ do
       ;;
     -s | --search ) shift
       SEARCH="$1"
+      ;;
+    -m | --mirror) MIRROR="true"
       ;;
     -n | --dry-run) DRY_RUN="true"
       ;;
@@ -144,6 +148,11 @@ fi
 mkdir -p "$CLONE_PATH"
 cd "$CLONE_PATH"
 
+if [ "$MIRROR" == "true" ]
+then
+  GITFLAGS="--mirror"
+fi
+
 set +e
 for repo in $REPOS
 do
@@ -156,6 +165,6 @@ do
     git checkout "$default_branch" && git pull
     cd ..
   else
-    gh repo clone "$repo"
+    gh repo clone "$repo" -- "$GITFLAGS"
   fi
 done
