@@ -148,9 +148,11 @@ fi
 mkdir -p "$CLONE_PATH"
 cd "$CLONE_PATH"
 
+GITFLAGS=""
+
 if [ "$MIRROR" == "true" ]
 then
-  GITFLAGS="--mirror"
+  GITFLAGS="$GITFLAGS --mirror"
 fi
 
 set +e
