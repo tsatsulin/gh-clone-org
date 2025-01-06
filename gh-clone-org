@@ -161,11 +161,18 @@ do
   d=${repo#*/}
   if [ -d "$d" ]
   then
-    echo "'$d' already exists, attempting to checkout the default branch and pull"
     cd "$d"
-    git fetch --all --prune
-    default_branch="$(gh api "repos/$repo" -q '.default_branch')"
-    git checkout "$default_branch" && git pull
+    if [ "$MIRROR" == "true" ]
+    then
+      echo "'$d' already exists, attempting to fetch updates and prune"
+      # Fetches updates from a specific remote (origin).
+      # Prunes (-p) remote-tracking branches that have been deleted on the remote.
+      git fetch -p origin
+    else
+      echo "'$d' already exists, attempting to checkout the default branch and pull"
+      default_branch="$(gh api "repos/$repo" -q '.default_branch')"
+      git checkout "$default_branch" && git pull
+    fi
     cd ..
   else
     gh repo clone "$repo" "$d" -- $GITFLAGS
