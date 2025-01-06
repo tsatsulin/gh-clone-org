@@ -168,6 +168,6 @@ do
     git checkout "$default_branch" && git pull
     cd ..
   else
-    gh repo clone "$repo" -- "$GITFLAGS"
+    gh repo clone "$repo" "$d" -- $GITFLAGS
   fi
 done
